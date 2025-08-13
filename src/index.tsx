@@ -15,13 +15,13 @@ const root = createRoot(domNode);
 const App = () => {
 	const [style, setStyle] = useState(defaultArticleState);
 
+	const resetStyles = (defaultStyles: typeof defaultArticleState) => {
+		setStyle(defaultStyles);
+	};
+
 	const onChangeStyles = (e: any, newStyles: typeof defaultArticleState) => {
 		e.preventDefault();
 		setStyle(newStyles);
-	};
-
-	const resetStyles = (defaultStyles: typeof defaultArticleState) => {
-		setStyle(defaultStyles);
 	};
 
 	return (
