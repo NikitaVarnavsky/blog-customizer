@@ -22,7 +22,9 @@ jobs:
       - name: Install Playwright browsers for tests
         run: |
           cd /tmp/tests-blog-customizer
+          npm i -g wait-port@1.0.4
           npm ci
+          npm i --prefix /tmp/tests-blog-customizer
           npx playwright install
       - name: Run tests
         run: bash /tmp/tests-blog-customizer/run.sh
