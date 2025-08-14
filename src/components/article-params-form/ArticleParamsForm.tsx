@@ -2,7 +2,7 @@ import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
 
 import styles from './ArticleParamsForm.module.scss';
-import { useRef, useState } from 'react';
+import { FormEvent, useRef, useState } from 'react';
 import { Select } from 'src/ui/select';
 import {
 	backgroundColors,
@@ -17,14 +17,14 @@ import { Text } from 'src/ui/text';
 import { RadioGroup } from 'src/ui/radio-group';
 import { Separator } from 'src/ui/separator';
 import { useOutsideClickClose } from 'src/ui/select/hooks/useOutsideClickClose';
+import { clsx } from 'clsx';
 
 type ArticleParamsFormType = {
-	onChangeStyles: (e: any, newStyles: typeof defaultArticleState) => void;
-	resetStyles: (defaultStyles: typeof defaultArticleState) => void;
+	setStyle: (newStyles: typeof defaultArticleState) => void;
 };
 
 export const ArticleParamsForm = (props: ArticleParamsFormType) => {
-	const { onChangeStyles, resetStyles } = props;
+	const { setStyle } = props;
 
 	const asideRef = useRef<HTMLDivElement>(null);
 
@@ -74,18 +74,16 @@ export const ArticleParamsForm = (props: ArticleParamsFormType) => {
 	};
 
 	const onResetStyles = () => {
-		setCurrentStyles((prev) => {
-			const defaultStyles = {
-				...prev,
-				fontFamilyOption: defaultArticleState.fontFamilyOption,
-				fontColor: defaultArticleState.fontColor,
-				backgroundColor: defaultArticleState.backgroundColor,
-				contentWidth: defaultArticleState.contentWidth,
-				fontSizeOption: defaultArticleState.fontSizeOption,
-			};
-			resetStyles(defaultStyles);
-			return defaultStyles;
-		});
+		setCurrentStyles(defaultArticleState);
+		setStyle(defaultArticleState);
+	};
+
+	const onChangeStyles = (
+		e: FormEvent<HTMLFormElement>,
+		newStyles: typeof defaultArticleState
+	) => {
+		e.preventDefault();
+		setStyle(newStyles);
 	};
 
 	useOutsideClickClose({
@@ -104,13 +102,15 @@ export const ArticleParamsForm = (props: ArticleParamsFormType) => {
 			/>
 			<aside
 				ref={asideRef}
-				className={`${styles.container} ${
-					isOpenModal ? styles.container_open : null
-				}`}>
+				className={clsx(
+					styles.container,
+					isOpenModal && styles.container_open
+				)}>
 				<form
 					onSubmit={(e) => {
 						onChangeStyles(e, currentStyles);
 					}}
+					onReset={onResetStyles}
 					className={styles.form}>
 					<div className={styles.spacing_50}>
 						<Text
@@ -168,12 +168,7 @@ export const ArticleParamsForm = (props: ArticleParamsFormType) => {
 						/>
 					</div>
 					<div className={styles.bottomContainer}>
-						<Button
-							title='Сбросить'
-							htmlType='reset'
-							type='clear'
-							onClick={onResetStyles}
-						/>
+						<Button title='Сбросить' htmlType='reset' type='clear' />
 						<Button title='Применить' htmlType='submit' type='apply' />
 					</div>
 				</form>

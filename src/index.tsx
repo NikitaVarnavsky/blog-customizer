@@ -15,15 +15,6 @@ const root = createRoot(domNode);
 const App = () => {
 	const [style, setStyle] = useState(defaultArticleState);
 
-	const resetStyles = (defaultStyles: typeof defaultArticleState) => {
-		setStyle(defaultStyles);
-	};
-
-	const onChangeStyles = (e: any, newStyles: typeof defaultArticleState) => {
-		e.preventDefault();
-		setStyle(newStyles);
-	};
-
 	return (
 		<main
 			className={clsx(styles.main)}
@@ -36,10 +27,7 @@ const App = () => {
 					'--bg-color': style.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm
-				onChangeStyles={onChangeStyles}
-				resetStyles={resetStyles}
-			/>
+			<ArticleParamsForm setStyle={setStyle} />
 			<Article />
 		</main>
 	);
